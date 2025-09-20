@@ -3,6 +3,7 @@ package langfuse
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -106,13 +107,8 @@ func NewClient(config Config) (*Client, error) {
 		return nil, fmt.Errorf("invalid base URL: %w", err)
 	}
 	
-	fmt.Printf("Debug - baseURL: %s\n", baseURL)
-	fmt.Printf("Debug - u.Scheme: %s\n", u.Scheme)
-	fmt.Printf("Debug - u.Host: %s\n", u.Host)
-
 	// Use host only for endpoint when using WithURLPath
 	endpoint := u.Host
-	fmt.Printf("Debug - constructed endpoint: %s\n", endpoint)
 
 	authHeader := fmt.Sprintf("Basic %s", encodeBasicAuth(config.PublicKey, config.SecretKey))
 
@@ -515,43 +511,8 @@ func (t *Trace) CreateEvent(name string, opts ...EventOption) *Event {
 	return e
 }
 
-// Utility function to encode basic auth
+// encodeBasicAuth encodes basic auth credentials
 func encodeBasicAuth(username, password string) string {
 	auth := username + ":" + password
-	return base64Encode([]byte(auth))
+	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
-
-// Simple base64 encoding function
-func base64Encode(data []byte) string {
-	const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-	var result strings.Builder
-	
-	for i := 0; i < len(data); i += 3 {
-		var b1, b2, b3 byte
-		b1 = data[i]
-		if i+1 < len(data) {
-			b2 = data[i+1]
-		}
-		if i+2 < len(data) {
-			b3 = data[i+2]
-		}
-		
-		result.WriteByte(base64Chars[(b1>>2)&0x3F])
-		result.WriteByte(base64Chars[((b1&0x03)<<4)|((b2>>4)&0x0F)])
-		
-		if i+1 < len(data) {
-			result.WriteByte(base64Chars[((b2&0x0F)<<2)|((b3>>6)&0x03)])
-		} else {
-			result.WriteByte('=')
-		}
-		
-		if i+2 < len(data) {
-			result.WriteByte(base64Chars[b3&0x3F])
-		} else {
-			result.WriteByte('=')
-		}
-	}
-	
-	return result.String()
-}
-

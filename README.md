@@ -280,13 +280,6 @@ generation.End()
 2. **Authentication failures**: Verify your API keys are correct and have proper permissions
 3. **Network issues**: Check if your firewall allows HTTPS traffic to Langfuse
 
-### Debug Mode
-
-Set environment variable for verbose logging:
-```bash
-export LANGFUSE_DEBUG=true
-```
-
 ## Contributing
 
 1. Fork the repository

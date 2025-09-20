@@ -62,19 +62,8 @@ func main() {
 	// Simulate processing time
 	time.Sleep(100 * time.Millisecond)
 
-	// Set span output using WithSpanOutput option
-	span = trace.CreateSpan("process-query",
-		langfuse.WithSpanOutput("Processed query for Go integration help"),
-	)
+	// End the span
 	span.End()
-
-	// Set trace output using WithTraceOutput option
-	trace = client.CreateTrace(ctx, "user-query",
-		langfuse.WithTraceOutput(map[string]interface{}{
-			"response":   "Here's how to integrate Langfuse with Go...",
-			"confidence": 0.95,
-		}),
-	)
 
 	fmt.Println("✅ Simple trace example completed")
 

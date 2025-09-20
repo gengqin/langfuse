@@ -52,17 +52,7 @@ func main() {
 	// Simulate processing
 	time.Sleep(100 * time.Millisecond)
 
-	// Set error information
-	errorSpan = trace.CreateSpan("external-api-call",
-		langfuse.WithSpanOutput(map[string]interface{}{
-			"error":       "Connection timeout after 5s",
-			"status_code": 408,
-		}),
-		langfuse.WithSpanMetadata(map[string]interface{}{
-			"retry_count":      "3",
-			"timeout_duration": "5s",
-		}),
-	)
+	// Simulate processing and end span
 	errorSpan.End()
 
 	// Log error event

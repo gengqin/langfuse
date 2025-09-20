@@ -55,12 +55,7 @@ func main() {
 	)
 	time.Sleep(200 * time.Millisecond)
 
-	analysisSpan = trace.CreateSpan("code-analysis",
-		langfuse.WithSpanOutput(map[string]interface{}{
-			"issues_found":     3,
-			"complexity_score": 7.5,
-		}),
-	)
+	// Simulate analysis processing
 	analysisSpan.End()
 
 	// Step 2: LLM-based code review
@@ -71,24 +66,13 @@ func main() {
 			"code":    "package main\n\nfunc main() { ... }",
 			"context": "Go web service code review",
 		}),
-	)
-	time.Sleep(800 * time.Millisecond)
-
-	reviewGeneration = trace.CreateGeneration("code-review-llm",
-		langfuse.WithGenerationOutput(map[string]interface{}{
-			"review": "The code looks good overall, but consider...",
-			"suggestions": []string{
-				"Add error handling for database connections",
-				"Consider using context for timeout management",
-			},
-			"score": 8.5,
-		}),
 		langfuse.WithGenerationUsage(langfuse.Usage{
 			PromptTokens:     1250,
 			CompletionTokens: 340,
 			TotalTokens:      1590,
 		}),
 	)
+	time.Sleep(800 * time.Millisecond)
 	reviewGeneration.End()
 
 	// Step 3: Log important events
@@ -105,14 +89,7 @@ func main() {
 		}),
 	)
 
-	trace = client.CreateTrace(ctx, "code-review-workflow",
-		langfuse.WithTraceOutput(map[string]interface{}{
-			"status":            "completed",
-			"overall_score":     8.5,
-			"approved":          true,
-			"suggestions_count": 2,
-		}),
-	)
+	// Trace will automatically end with the defer statement
 
 	fmt.Println("✅ Complex trace example completed")
 

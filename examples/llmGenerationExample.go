@@ -64,25 +64,8 @@ func main() {
 	// Simulate API call
 	time.Sleep(500 * time.Millisecond)
 
-	// Set generation results using options pattern
-	generation = trace.CreateGeneration("openai-completion",
-		langfuse.WithGenerationOutput(map[string]interface{}{
-			"content": `func sortInts(slice []int) {
-	sort.Ints(slice)
-}`,
-			"finish_reason": "stop",
-		}),
-		langfuse.WithGenerationUsage(langfuse.Usage{
-			PromptTokens:     45,
-			CompletionTokens: 32,
-			TotalTokens:      77,
-		}),
-		langfuse.WithGenerationCost(langfuse.Cost{
-			Input:  0.00015,
-			Output: 0.0006,
-			Total:  0.00075,
-		}),
-	)
+	// In a real implementation, you would set the output, usage, and cost
+	// here after receiving the API response. For this example, we'll just end the generation.
 	generation.End()
 
 	fmt.Println("✅ LLM generation example completed")
