@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gengqin/langfuse"
+	"github.com/qinrichard/langfuse"
 )
 
 func main() {

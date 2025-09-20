@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -94,22 +95,43 @@ func NewClient(config Config) (*Client, error) {
 		config.BaseURL = "https://cloud.langfuse.com"
 	}
 
-	// Create OTLP exporter
-	endpoint := fmt.Sprintf("%s/api/public/otel", config.BaseURL)
+	// Create OTLP exporter with proper URL handling
+	baseURL := config.BaseURL
+	if !strings.HasPrefix(baseURL, "http://") && !strings.HasPrefix(baseURL, "https://") {
+		baseURL = "https://" + baseURL
+	}
+	
+	u, err := url.Parse(baseURL)
+	if err != nil {
+		return nil, fmt.Errorf("invalid base URL: %w", err)
+	}
+	
+	fmt.Printf("Debug - baseURL: %s\n", baseURL)
+	fmt.Printf("Debug - u.Scheme: %s\n", u.Scheme)
+	fmt.Printf("Debug - u.Host: %s\n", u.Host)
+
+	// Use host only for endpoint when using WithURLPath
+	endpoint := u.Host
+	fmt.Printf("Debug - constructed endpoint: %s\n", endpoint)
+
 	authHeader := fmt.Sprintf("Basic %s", encodeBasicAuth(config.PublicKey, config.SecretKey))
 
-	exporter, err := otlptracehttp.New(context.Background(),
+	// Build options slice for cleaner conditional logic
+	options := []otlptracehttp.Option{
 		otlptracehttp.WithEndpoint(endpoint),
+		otlptracehttp.WithURLPath("/api/public/otel/v1/traces"),
 		otlptracehttp.WithHeaders(map[string]string{
 			"Authorization": authHeader,
 		}),
-		func() otlptracehttp.Option {
-			if strings.HasPrefix(config.BaseURL, "http://") {
-				return otlptracehttp.WithInsecure()
-			}
-			return otlptracehttp.WithTLSClientConfig(nil)
-		}(),
-	)
+	}
+
+	// Add scheme-specific options
+	if u.Scheme == "http" {
+		options = append(options, otlptracehttp.WithInsecure())
+	}
+
+	// Create exporter with all options
+	exporter, err := otlptracehttp.New(context.Background(), options...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create OTLP exporter: %w", err)
 	}
@@ -532,3 +554,4 @@ func base64Encode(data []byte) string {
 	
 	return result.String()
 }
+

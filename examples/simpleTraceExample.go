@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gengqin/langfuse"
+	"github.com/qinrichard/langfuse"
 )
 
 func main() {
@@ -62,12 +62,13 @@ func main() {
 	// Simulate processing time
 	time.Sleep(100 * time.Millisecond)
 
+	// Set span output using WithSpanOutput option
 	span = trace.CreateSpan("process-query",
 		langfuse.WithSpanOutput("Processed query for Go integration help"),
 	)
 	span.End()
 
-	// Set trace output
+	// Set trace output using WithTraceOutput option
 	trace = client.CreateTrace(ctx, "user-query",
 		langfuse.WithTraceOutput(map[string]interface{}{
 			"response":   "Here's how to integrate Langfuse with Go...",

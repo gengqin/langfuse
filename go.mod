@@ -1,4 +1,4 @@
-module github.com/gengqin/langfuse
+module github.com/qinrichard/langfuse
 
 go 1.25.1
 

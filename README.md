@@ -14,7 +14,7 @@ A Go SDK for [Langfuse](https://langfuse.com), the open-source LLM observability
 ## Installation
 
 ```bash
-go get github.com/gengqin/langfuse
+go get github.com/qinrichard/langfuse
 ```
 
 ## Quick Start
@@ -35,7 +35,7 @@ package main
 import (
     "context"
     "os"
-    "github.com/gengqin/langfuse"
+    "github.com/qinrichard/langfuse"
 )
 
 func main() {
@@ -304,4 +304,4 @@ export LANGFUSE_DEBUG=true
 
 - 📖 [Langfuse Documentation](https://langfuse.com/docs)
 - 💬 [Discord Community](https://discord.gg/7NXusRtqYU)
-- 🐛 [Issue Tracker](https://github.com/gengqin/langfuse/issues)
+- 🐛 [Issue Tracker](https://github.com/qinrichard/langfuse/issues)

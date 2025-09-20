@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gengqin/langfuse"
+	"github.com/qinrichard/langfuse"
 )
 
 func main() {
@@ -54,7 +54,7 @@ func main() {
 		}),
 	)
 	time.Sleep(200 * time.Millisecond)
-	
+
 	analysisSpan = trace.CreateSpan("code-analysis",
 		langfuse.WithSpanOutput(map[string]interface{}{
 			"issues_found":     3,
@@ -73,7 +73,7 @@ func main() {
 		}),
 	)
 	time.Sleep(800 * time.Millisecond)
-	
+
 	reviewGeneration = trace.CreateGeneration("code-review-llm",
 		langfuse.WithGenerationOutput(map[string]interface{}{
 			"review": "The code looks good overall, but consider...",
@@ -107,10 +107,10 @@ func main() {
 
 	trace = client.CreateTrace(ctx, "code-review-workflow",
 		langfuse.WithTraceOutput(map[string]interface{}{
-			"status":             "completed",
-			"overall_score":      8.5,
-			"approved":           true,
-			"suggestions_count":  2,
+			"status":            "completed",
+			"overall_score":     8.5,
+			"approved":          true,
+			"suggestions_count": 2,
 		}),
 	)
 
